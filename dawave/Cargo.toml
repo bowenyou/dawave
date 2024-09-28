@@ -1,0 +1,20 @@
+[package]
+name = "dawave"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+eigenda-proto = { path = "../eigenda-proto/" }
+tokio = { version = "1.40.0", features = ["full"] }
+tonic = { version = "0.12.2", features = ["tls", "tls-native-roots", "tls-webpki-roots"] }
+kzgpad-rs = { git = "https://github.com/Layr-Labs/kzgpad-rs.git" }
+futures = "0.3.30"
+alloy-primitives = "0.8.3"
+alloy-rpc-types-eth = "0.3.6"
+alloy-provider = { version = "0.3.6", features = ["ws"] }
+alloy-sol-macro = "0.8.5"
+alloy-sol-types = "0.8.5"
+anyhow = "1.0.89"
+clap = { version = "4.5.18", features = ["derive"] }
+borsh = { version = "1.5.1", features = ["derive"] }
+
