@@ -13,8 +13,6 @@ For mainnet, replace the disperser url and contract address.
 
 ## Usage
 
-First navigate to the `dawave` directory. `cd dawave`
-
 Can install as an executable via `cargo install --path .` or just run it using `cargo`.
 
 ```bash

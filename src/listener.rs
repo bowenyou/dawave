@@ -9,6 +9,7 @@ use borsh::from_slice;
 use eigenda_proto::disperser::{disperser_client::DisperserClient, RetrieveBlobRequest};
 use futures::StreamExt;
 use kzgpad_rs::remove_empty_byte_from_padded_bytes;
+use rodio::OutputStream;
 
 use crate::{
     constants::{TESTNET_DISPERSER_URL, TESTNET_EIGENDA_ADDRESS},
@@ -61,8 +62,11 @@ pub async fn listen_to_blobs(url: &str, channel: &str) -> Result<()> {
                     if message.channel.eq(channel) {
                         println!(
                             "Message received in channel {:?}: {:?}",
-                            message.channel, message.message
-                        )
+                            message.channel,
+                            message.audio.len()
+                        );
+
+                        play_audio(message.audio).ok();
                     }
                 }
                 blob_index += 1;
@@ -77,5 +81,17 @@ pub async fn listen_to_blobs(url: &str, channel: &str) -> Result<()> {
         );
     }
 
+    Ok(())
+}
+
+pub fn play_audio(audio_data: Vec<u8>) -> Result<()> {
+    let (_stream, stream_handle) = OutputStream::try_default()?;
+    let sink = rodio::Sink::try_new(&stream_handle)?;
+
+    let cursor = std::io::Cursor::new(audio_data);
+    let source = rodio::Decoder::new(cursor).unwrap();
+    sink.append(source);
+
+    sink.sleep_until_end();
     Ok(())
 }

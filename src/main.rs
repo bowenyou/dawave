@@ -1,6 +1,8 @@
+use std::{fs::File, io::Read};
+
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use listener::listen_to_blobs;
+use listener::{listen_to_blobs, play_audio};
 use message::DAWaveMessage;
 use sender::send_message;
 
@@ -18,8 +20,9 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    SendMessage { channel: String, message: String },
+    SuggestSong { channel: String, audio_path: String },
     Listen { node_url: String, channel: String },
+    TestPlayback { audio_path: String },
 }
 
 #[tokio::main]
@@ -32,10 +35,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 eprintln!("Error listening for blobs: {}", e);
             }
         }
-        Commands::SendMessage { channel, message } => {
-            if let Err(e) = send_message(DAWaveMessage { channel, message }).await {
+        Commands::SuggestSong {
+            channel,
+            audio_path,
+        } => {
+            let mut file = File::open(audio_path)?;
+            let mut audio_data = Vec::new();
+            file.read_to_end(&mut audio_data)?;
+
+            let message = DAWaveMessage {
+                channel,
+                audio: audio_data,
+            };
+
+            if let Err(e) = send_message(message).await {
                 eprintln!("Error sending message: {}", e);
             }
+        }
+        Commands::TestPlayback { audio_path } => {
+            let mut file = File::open(audio_path)?;
+            let mut audio_data = Vec::new();
+            file.read_to_end(&mut audio_data)?;
+
+            play_audio(audio_data)?;
         }
     }
 

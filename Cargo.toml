@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-eigenda-proto = { path = "../eigenda-proto/" }
+eigenda-proto = { git = "https://github.com/bowenyou/eigenda-proto" }
 tokio = { version = "1.40.0", features = ["full"] }
 tonic = { version = "0.12.2", features = ["tls", "tls-native-roots", "tls-webpki-roots"] }
 kzgpad-rs = { git = "https://github.com/Layr-Labs/kzgpad-rs.git" }
@@ -17,4 +17,5 @@ alloy-sol-types = "0.8.5"
 anyhow = "1.0.89"
 clap = { version = "4.5.18", features = ["derive"] }
 borsh = { version = "1.5.1", features = ["derive"] }
+rodio = "0.19.0"
 
