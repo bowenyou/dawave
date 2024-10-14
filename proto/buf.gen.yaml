@@ -1,0 +1,8 @@
+version: v2
+plugins:
+  - remote: buf.build/community/neoeinstein-prost:v0.3.1
+    out: ../eigenda-proto/src/prost/
+  - remote: buf.build/community/neoeinstein-tonic:v0.3.0
+    out: ../eigenda-proto/src/prost/
+    opt:
+      - no_server

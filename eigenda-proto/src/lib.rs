@@ -1,19 +1,18 @@
-pub mod common {
-    tonic::include_proto!("common");
-}
-
 pub mod churner {
-    tonic::include_proto!("churner");
+    include!("prost/churner.rs");
 }
-
-pub mod retriever {
-    tonic::include_proto!("retriever");
+pub mod common {
+    include!("prost/common.rs");
 }
-
-pub mod node {
-    tonic::include_proto!("node");
-}
-
 pub mod disperser {
-    tonic::include_proto!("disperser");
+    include!("prost/disperser.rs");
+}
+pub mod lightnode {
+    include!("prost/lightnode.rs");
+}
+pub mod node {
+    include!("prost/node.rs");
+}
+pub mod retriever {
+    include!("prost/retriever.rs");
 }
