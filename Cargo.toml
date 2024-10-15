@@ -18,4 +18,5 @@ anyhow = "1.0.89"
 clap = { version = "4.5.18", features = ["derive"] }
 borsh = { version = "1.5.1", features = ["derive"] }
 rodio = "0.19.0"
+flate2 = "1.0.34"
 

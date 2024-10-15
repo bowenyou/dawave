@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::{io::Read, time::Duration};
 
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types_eth::Filter;
@@ -66,7 +66,9 @@ pub async fn listen_to_blobs(url: &str, channel: &str) -> Result<()> {
                             message.audio.len()
                         );
 
-                        play_audio(message.audio).ok();
+                        let decompressed = decompress_audio(&message.audio)?;
+
+                        play_audio(decompressed).ok();
                     }
                 }
                 blob_index += 1;
@@ -82,6 +84,13 @@ pub async fn listen_to_blobs(url: &str, channel: &str) -> Result<()> {
     }
 
     Ok(())
+}
+
+pub fn decompress_audio(data: &[u8]) -> Result<Vec<u8>> {
+    let mut decoder = flate2::read::GzDecoder::new(data);
+    let mut decompressed_data = Vec::new();
+    decoder.read_to_end(&mut decompressed_data)?;
+    Ok(decompressed_data)
 }
 
 pub fn play_audio(audio_data: Vec<u8>) -> Result<()> {

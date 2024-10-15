@@ -4,7 +4,7 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use listener::{listen_to_blobs, play_audio};
 use message::DAWaveMessage;
-use sender::send_message;
+use sender::{compress_audio, send_message};
 
 mod constants;
 mod listener;
@@ -43,10 +43,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             let mut audio_data = Vec::new();
             file.read_to_end(&mut audio_data)?;
 
+            let compressed = compress_audio(&audio_data)?;
+
             let message = DAWaveMessage {
                 channel,
-                audio: audio_data,
+                audio: compressed.clone(),
             };
+
+            println!("{:?}, {:?}", audio_data.len(), compressed.len());
 
             if let Err(e) = send_message(message).await {
                 eprintln!("Error sending message: {}", e);
